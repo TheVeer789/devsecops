@@ -95,6 +95,6 @@ jobs:
     # 🚀 Push Image
     - name: Build, Tag and Push Image
       run: |
-       docker build -t devops-app .
-       docker tag devops-app ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
-       docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+        docker build -t devops-app:latest .
+        docker tag devops-app:latest ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
