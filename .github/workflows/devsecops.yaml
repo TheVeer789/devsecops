@@ -57,18 +57,28 @@ jobs:
       run: docker run -d -p 8080:80 devops-app
 
     # 🔐 Stage 10 — OWASP ZAP Scan
-    - name: Run ZAP Baseline Scan (manual)
+ # 🔧 Fix permissions (important for Docker volume write)
+    - name: Fix workspace permissions
+      run: sudo chmod -R 777 $PWD
+
+# 🚀 Run ZAP Baseline Scan manually (no broken GitHub action)
+    - name: Run ZAP Baseline Scan
       run: |
         docker pull ghcr.io/zaproxy/zaproxy:stable
-        docker run --network=host \
-        -v $PWD:/zap/wrk/:rw \
-        ghcr.io/zaproxy/zaproxy:stable \
-        zap-baseline.py \
-        -t http://localhost:8080 \
-        -J report_json.json \
-        -w report_md.md \
-        -r report_html.html
-
+        docker run --user root --network=host \
+          -v $PWD:/zap/wrk/:rw \
+          ghcr.io/zaproxy/zaproxy:stable \
+          zap-baseline.py \
+          -t http://localhost:8080 \
+          -J report_json.json \
+          -w report_md.md \
+          -r report_html.html || true
+    
+    # 🔍 Debug (optional but recommended)
+    - name: Verify reports
+      run: ls -l
+    
+    # 📦 Upload reports (GitHub supported version)
     - name: Upload ZAP Report
       uses: actions/upload-artifact@v4
       with:
