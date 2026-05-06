@@ -88,13 +88,18 @@ jobs:
           report_json.json
           report_md.md
 
-    # 🔑 Stage 11 — Docker Login
+    # 🔑 Stage 11 — Docker Login + Tag + Push (FIXED)
+
     - name: Docker Login
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-    # 🚀 Push Image
-    - name: Build, Tag and Push Image
+    
+    - name: Tag and Push Image
       run: |
-        docker build -t devops-app:latest .
+        # ensure image exists
+        docker images
+    
+        # correct tag (NO leading /)
         docker tag devops-app:latest ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+    
+        # push to Docker Hub
         docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
