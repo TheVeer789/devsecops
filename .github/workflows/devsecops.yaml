@@ -42,7 +42,7 @@ jobs:
 
     # 🐳 Stage 7 — Build Docker Image
     - name: Build Docker Image
-      run: docker build -t devops-app ./app
+      run: docker build -t devops-app .
 
     # 🔐 Stage 8 — Trivy Image Scan
     - name: Trivy Image Scan
