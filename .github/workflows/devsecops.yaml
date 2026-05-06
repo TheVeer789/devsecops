@@ -91,26 +91,23 @@ jobs:
     # 🔑 Stage 11 — Docker Login + Tag + Push (FIXED)
     - name: Build Docker Image
       run: docker build -t devops-app:latest .
-
+        DOCKER_USER=$(echo "$DOCKER_USER" | xargs)
     - name: Push to Docker Hub
       env:
-          DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         # Login
         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
     
-        # DEBUG (DO NOT REMOVE)
-        echo "DOCKER_USER length: ${#DOCKER_USER}"
+        # CLEAN VARIABLE (IMPORTANT FIX)
+        DOCKER_USER=$(echo "$DOCKER_USER" | tr -d '\n\r ')
     
-        # Ensure image exists
+        echo "Clean user: $DOCKER_USER"
+    
         docker images
     
-        # FORCE SAFE TAG (prevents empty variable crash)
-        if [ -z "$DOCKER_USER" ]; then
-          echo "ERROR: DOCKER_USER is empty"
-          exit 1
-        fi
-    
+        # SAFE TAG (NO NEWLINES, NO SLASH ISSUES)
         docker tag devops-app:latest "${DOCKER_USER}/devops-app:latest"
+    
         docker push "${DOCKER_USER}/devops-app:latest"
