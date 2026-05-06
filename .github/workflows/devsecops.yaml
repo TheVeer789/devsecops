@@ -65,7 +65,8 @@ jobs:
       with:
         target: 'http://localhost:8080'
         fail_action: false   # change to true in production
-        docker-options: '-u root'
+                  # ✅ don't fail on warnings
+        allow_issue_writing: false      # ✅ avoid GitHub issue error
 
     # 🔑 Stage 11 — Docker Login
     - name: Docker Login
