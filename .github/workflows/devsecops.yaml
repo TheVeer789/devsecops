@@ -57,10 +57,11 @@ jobs:
       run: docker run -d -p 8080:80 devops-app
 
     # 🔐 Stage 10 — OWASP ZAP Scan
-    - name: ZAP Scan
-      uses: zaproxy/action-full-scan@v0.7.0
+    - name: ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.10.0
       with:
         target: 'http://localhost:8080'
+        fail_action: true
 
     # 🔑 Stage 11 — Docker Login
     - name: Docker Login
