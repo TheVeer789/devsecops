@@ -22,10 +22,11 @@ jobs:
 
     # 🔐 Stage 3 — Trivy FS Scan
     - name: Trivy FS Scan
-      uses: aquasecurity/trivy-action@0.20.0
+      uses: aquasecurity/trivy-action@master
       with:
         scan-type: fs
         severity: HIGH,CRITICAL
+
 
     # 🔐 Stage 4 — Dependency Check
     - name: OWASP Dependency Check
